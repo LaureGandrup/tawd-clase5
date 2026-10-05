@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
+const { ApolloServerPluginLandingPageLocalDefault } = require('@apollo/server/plugin/landingPage/default');
 const mongoose = require('mongoose');
 const typeDefs = require('./graphql/typeDefs');
 const resolvers = require('./graphql/resolvers');
@@ -19,11 +20,14 @@ const startServer = async () => {
     process.exit(1);
   }
 
-  // Apollo Server con introspección y Apollo Sandbox habilitados
+  // Apollo Server con introspección y Apollo Sandbox habilitados explícitamente
   const server = new ApolloServer({
     typeDefs,
     resolvers,
     introspection: true,
+    plugins: [
+      ApolloServerPluginLandingPageLocalDefault({ footer: false })
+    ],
   });
 
   await server.start();
